@@ -5,12 +5,19 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cons = require('consolidate');
 var bodyParser = require('body-parser');
+const moongose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
 
 var app = express();
+
+
+moongose.connect('mongodb://localhost/Evernote').then(()=>
+{console.log('Bağlantı Kuruldu.')})
+.catch((err)=>
+{console.log(err)})
 
 // view engine setup
 
@@ -49,5 +56,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;
