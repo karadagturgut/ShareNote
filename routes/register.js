@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+
+//Models
 var User = require('../models/User');
 
 router.get('/', function(req, res, next) {
@@ -7,18 +9,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  const name = req.body.name;
-  const surname = req.body.surname;
-  const madress = req.body.madress;
-  var number = req.body.number;
-  const password = req.body.password;
 
-  var newUser = new User();
-  newUser.name=name;
-  newUser.surname=surname;
-  newUser.madress=madress;
-  newUser.number=number;
-  newUser.password=password;
+
+  const {name,surname,madress,number,password} = req.body;
+  var newUser = new User({
+    name,surname,madress,number,password
+  });
   newUser.save(function(err,savedUser)
   {
     if(err)

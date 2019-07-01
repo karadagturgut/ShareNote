@@ -1,5 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var db = require('mongoose');
+
+var User = require('../models/User');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,12 +12,23 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   console.log(req.body);
-  res.render('login',
-  {
-    username:req.body.user,
-    password:req.body.passwrd
-});
 
+  const {username,password}=req.body;
+  User.findOne({number:username,password:password}, function(err,user) {
+    if(err)
+    {
+      console.log(err);
+      return res.status(500).send();
+    }
+    if(!user)
+    {
+      return res.status(404).send();
+    }
+
+    return res.status(200).send();
+    
+  });
+   return res.render('index');
 });
 
 module.exports = router;

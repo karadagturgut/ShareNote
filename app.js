@@ -1,3 +1,4 @@
+// dependencies called :  
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,6 +7,9 @@ var logger = require('morgan');
 const cons = require('consolidate');
 var bodyParser = require('body-parser');
 const moongose = require('mongoose');
+var session = require('express-session');
+
+//routing variables : 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
@@ -13,19 +17,28 @@ var registerRouter = require('./routes/register');
 
 var app = express();
 
+// connection status:
 
 moongose.connect('mongodb://localhost/Evernote').then(()=>
 {console.log('Bağlantı Kuruldu.')})
 .catch((err)=>
 {console.log(err)})
 
-// view engine setup
+// view engine setup: html set. as you desire, can change as 'ejs' format.
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.engine('html',cons.swig);
+
+
+// use sessions for tracking logins:
+app.use(session({
+  secret: 'work hard',
+  resave: true,
+  saveUninitialized: false
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
