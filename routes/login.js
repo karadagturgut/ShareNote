@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 var User = require('../models/User');
 
@@ -10,25 +11,27 @@ router.get('/', function(req, res, next) {
   res.render('login');
 });
 
-router.post('/', function(req, res, next) {
-  console.log(req.body);
+router.post('/', async(req, res) => {
+ const {maddress,password}=req.body;
 
-  const {username,password}=req.body;
-  User.findOne({number:username,password:password}, function(err,user) {
-    if(err)
-    {
-      console.log(err);
-      return res.status(500).send();
-    }
-    if(!user)
-    {
-      return res.status(404).send();
-    }
+ console.log(maddress);
+ console.log(password);
+ try
+  {
+  const user = await User.findByCredentials(maddress,password)
+  res.render('index');
+} 
+ catch (error) {
 
-    return res.status(200).send();
+  console.log(error);
+   res.status(400).send();
+ }
+ 
+        
+ })
+
+
     
-  });
-   return res.render('index');
-});
+
 
 module.exports = router;

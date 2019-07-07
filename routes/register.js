@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
 
 //Models
 var User = require('../models/User');
@@ -9,26 +10,24 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-
-
-  const {name,surname,madress,number,password} = req.body;
-  var newUser = new User({
-    name,surname,madress,number,password
-  });
-  newUser.save(function(err,savedUser)
-  {
-    if(err)
-    {
-      console.log(err);
-      return res.status(500).send();
-      console.log(req.body);
-     
-    }
-   
-    return res.status(200).send();
+const {name,surname,maddress,number,password} = req.body;
+console.log(req.body);
+bcrypt.hash(password,10).then((hash)=>{
+  const newUser = new User({
     
-  })
+    name,surname,maddress,number,password:hash
+  });
+const promise = newUser.save();
+promise.then((data) =>{
   res.render('succesful');
+}).catch((err)=>
+{
+  res.json(err);
+})
 });
+});
+
+
+ 
 
 module.exports = router;
