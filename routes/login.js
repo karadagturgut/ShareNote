@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 var User = require('../models/User');
 
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('login');
 });
@@ -20,6 +19,10 @@ router.post('/', async(req, res) => {
   {
   const user = await User.findByCredentials(maddress,password)
   res.render('index');
+  const mail = user.email;
+  const name = user.name + " " + user.surname;
+
+ 
 } 
  catch (error) {
 

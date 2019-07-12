@@ -7,7 +7,8 @@ var logger = require('morgan');
 const cons = require('consolidate');
 var bodyParser = require('body-parser');
 const moongose = require('mongoose');
-var session = require('express-session');
+const session = require('express-session');
+
 
 //routing variables : 
 var indexRouter = require('./routes/index');
@@ -26,6 +27,30 @@ moongose.connect('mongodb://localhost/Evernote').then(()=>
 
 // view engine setup: html set. as you desire, can change as 'ejs' format.
 
+const SESS_LIFETIME = 1000*60*60*2;
+const SESS_NAME = 'sid';
+const SESS_SECRET = 'seCretValues';
+const IN_PROD ='production';
+
+app.use(logger('dev'));
+
+app.use(session({
+  
+  name:SESS_NAME,
+  resave:false,
+  saveUninitilazed: false,
+  secret:SESS_SECRET,
+
+  cookie:{
+    maxAge: SESS_LIFETIME,
+    sameSite:true,
+    secure: IN_PROD
+  }
+}));
+
+
+
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({extended:false}));
@@ -34,13 +59,10 @@ app.engine('html',cons.swig);
 
 
 // use sessions for tracking logins:
-app.use(session({
-  secret: 'work hard',
-  resave: true,
-  saveUninitialized: false
-}));
 
-app.use(logger('dev'));
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

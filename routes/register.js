@@ -10,8 +10,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+
 const {name,surname,maddress,number,password} = req.body;
+
 console.log(req.body);
+
 bcrypt.hash(password,10).then((hash)=>{
   const newUser = new User({
     
