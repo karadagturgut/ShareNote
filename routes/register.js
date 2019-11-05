@@ -32,8 +32,8 @@ promise.then((data) =>{
 }).catch((err)=>
 {
   res.json(err);
-})
-});
+     })
+  });
 });
 
 
